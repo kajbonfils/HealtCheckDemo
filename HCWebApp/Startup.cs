@@ -32,8 +32,8 @@ namespace HCWebApp
             .AddUrlGroup(new Uri(Configuration.GetSection("API:HCServiceHealth").Value), "HCWebService", Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Degraded, timeout: TimeSpan.FromMilliseconds(200));
             ;
 
-            // Demo6
-            services.AddHealthChecksUI().AddInMemoryStorage();
+            // TODO: Demo6
+            //services.AddHealthChecksUI().AddInMemoryStorage();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,15 +68,15 @@ namespace HCWebApp
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-                // Demo 6
-                endpoints.MapHealthChecksUI(setupOptions: setup =>
-                {
-                    setup.UIPath = "/healthui";
-                });
+                // TODO: Demo6
+                //endpoints.MapHealthChecksUI(setupOptions: setup =>
+                //{
+                //    setup.UIPath = "/healthui";
+                //});
             });
 
-            // Demo 6
-            app.UseHealthChecksUI();
+            // TODO: Demo6
+            //app.UseHealthChecksUI();
 
         }
     }
