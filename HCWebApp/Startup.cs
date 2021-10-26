@@ -28,7 +28,8 @@ namespace HCWebApp
 
             services.AddHealthChecks()
             .AddSqlServer(Configuration.GetConnectionString("database"), failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Degraded)
-            .AddServiceCheck(new Uri(Configuration.GetSection("API:HCServiceHealth").Value), failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Degraded());
+            .AddUrlGroup(new Uri(Configuration.GetSection("API:HCServiceHealth").Value), "HCWebService", Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Degraded, timeout: TimeSpan.FromMilliseconds(200));
+            //.AddServiceCheck(new Uri(Configuration.GetSection("API:HCServiceHealth").Value), failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Degraded());
             ;
         }
 

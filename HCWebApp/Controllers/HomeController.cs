@@ -25,7 +25,7 @@ namespace HCWebApp.Controllers
         public async Task<IActionResult> Index()
         {
             var health = await _healthCheckService.CheckHealthAsync();
-            var json = System.Text.Json.JsonSerializer.Serialize(health, new JsonSerializerOptions() { WriteIndented = true, MaxDepth=600 });
+            var json = "";// System.Text.Json.JsonSerializer.Serialize(health, new JsonSerializerOptions() { WriteIndented = true, MaxDepth=600 });
             var model = new HomeModel
             {
                 Health = health,
