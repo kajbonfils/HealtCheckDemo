@@ -1,15 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using HCWebApp.Controllers;
-using HCWebService.Controllers;
+using System.Data.SqlClient;
 
 namespace HCWebApp
 {
@@ -30,7 +26,22 @@ namespace HCWebApp
             services.AddTransient<IStockServiceRepository, StockServiceRepository>();
             services.AddControllersWithViews();
 
-            //services.AddHealthChecks();  // TODO: Demo1
+            services.AddHealthChecks()
+                // // TODO: Demo2
+                //.AddCheck("Database", () =>
+                //{
+                //    try
+                //    {
+                //        using var connection = new SqlConnection(Configuration.GetConnectionString("Database"));
+                //        connection.Open();
+                //        return HealthCheckResult.Healthy();
+                //    }
+                //    catch
+                //    {
+                //        return HealthCheckResult.Unhealthy();
+                //    }
+                //})
+                ;  
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,7 +66,7 @@ namespace HCWebApp
 
             app.UseEndpoints(endpoints =>
             {
-                //endpoints.MapHealthChecks("/health"); //.RequireHost("localhost:44394"); // TODO: Demo1
+                endpoints.MapHealthChecks("/health"); 
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

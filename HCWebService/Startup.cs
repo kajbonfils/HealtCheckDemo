@@ -22,7 +22,7 @@ namespace HCWebService
             services.AddTransient<IStockRepository, StockRepository>();
             services.AddControllers();
             
-            //services.AddHealthChecks(); // TODO: Demo1
+            services.AddHealthChecks(); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,7 +41,7 @@ namespace HCWebService
 
             app.UseEndpoints(endpoints =>
             {
-                //endpoints.MapHealthChecks("/health"); // TODO: Demo1
+                endpoints.MapHealthChecks("/health"); 
                 endpoints.MapControllers();
             });
         }
