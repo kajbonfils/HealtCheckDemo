@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using HCWebApp.Controllers;
 using System.Net.Http;
 using System;
+using HealthChecks.UI.Client;
 
 namespace HCWebApp
 {
@@ -29,8 +30,10 @@ namespace HCWebApp
             services.AddHealthChecks()
             .AddSqlServer(Configuration.GetConnectionString("database"), failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Degraded)
             .AddUrlGroup(new Uri(Configuration.GetSection("API:HCServiceHealth").Value), "HCWebService", Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Degraded, timeout: TimeSpan.FromMilliseconds(200));
-            //.AddServiceCheck(new Uri(Configuration.GetSection("API:HCServiceHealth").Value), failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Degraded());
             ;
+
+            // Demo6
+            services.AddHealthChecksUI().AddInMemoryStorage();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,11 +58,26 @@ namespace HCWebApp
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHealthChecks("/health"); 
+                endpoints.MapHealthChecks("/health");
+                endpoints.MapHealthChecks("/healthz", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+                {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+                // Demo 6
+                endpoints.MapHealthChecksUI(setupOptions: setup =>
+                {
+                    setup.UIPath = "/healthui";
+                });
             });
+
+            // Demo 6
+            app.UseHealthChecksUI();
+
         }
     }
 }
