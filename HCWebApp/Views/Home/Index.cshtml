@@ -1,0 +1,39 @@
+﻿@model HCWebApp.Controllers.HomeModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="d-flex justify-content-between align-items-center breaking-news bg-white">
+                    <div class="d-flex flex-row flex-grow-1 flex-fill justify-content-center bg-danger py-2 text-white px-1 news"><span class="d-flex align-items-center">&nbsp;Kajs Fake News</span></div>
+                    <marquee class="news-scroll" behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();">
+                        @foreach (var quote in Model.Quotes)
+                        {
+                            <a href="#">
+                                @quote.StockName
+                                @quote.StockPrice
+                            </a><span class="dot"></span>
+                        }
+
+                    </marquee>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ul class="list-group">
+        @foreach (var article in Model.Articles)
+        {
+            <li class="list-group-item">
+                <ul class="list-group">
+                    <li class="list-group-item">@article.PublishingDate.ToString("dd.MM.yyyy")</li>
+                    <li class="list-group-item"><h2>@article.Header</h2></li>
+                    <li class="list-group-item">@article.ArticleContent</li>
+                </ul>
+            </li>
+        }
+    </ul>
+</div>

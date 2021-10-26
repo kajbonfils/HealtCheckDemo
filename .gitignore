@@ -1,0 +1,36 @@
+#Ignore thumbnails created by Windows
+Thumbs.db
+#Ignore files built by Visual Studio
+*.obj
+*.exe
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+[Bb]in/
+Tools/
+[Oo]bj/
+*.sbr
+[Rr]elease/
+_ReSharper*/
+.vs/
+src/packages/
+appsettings.Development.json
+Logs
+*.nupkg
+# Ignore .idea files from Rider
+src/.idea/
+src/TestResults/TestResults.xml
+/.sonarqube
+src/.sonarlint

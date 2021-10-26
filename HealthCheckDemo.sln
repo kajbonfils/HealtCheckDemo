@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31729.503
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HCWebApp", "HCWebApp\HCWebApp.csproj", "{E6E713AB-A88E-4F21-A135-508D94561D0C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HCWebService", "HCWebService\HCWebService.csproj", "{59948409-B8D4-400D-9B74-068045988D05}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E6E713AB-A88E-4F21-A135-508D94561D0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6E713AB-A88E-4F21-A135-508D94561D0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6E713AB-A88E-4F21-A135-508D94561D0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6E713AB-A88E-4F21-A135-508D94561D0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59948409-B8D4-400D-9B74-068045988D05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59948409-B8D4-400D-9B74-068045988D05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59948409-B8D4-400D-9B74-068045988D05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59948409-B8D4-400D-9B74-068045988D05}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C5914321-596F-4875-B083-2A2495399A33}
+	EndGlobalSection
+EndGlobal
