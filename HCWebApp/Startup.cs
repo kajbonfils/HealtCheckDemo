@@ -30,7 +30,8 @@ namespace HCWebApp
             services.AddTransient<IStockServiceRepository, StockServiceRepository>();
             services.AddControllersWithViews();
 
-            //services.AddHealthChecks();  // TODO: Demo1
+            services.AddHealthChecks()
+                .AddSqlServer(Configuration.GetConnectionString("database"), failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Degraded);  
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,7 +56,7 @@ namespace HCWebApp
 
             app.UseEndpoints(endpoints =>
             {
-                //endpoints.MapHealthChecks("/health"); //.RequireHost("localhost:44394"); // TODO: Demo1
+                endpoints.MapHealthChecks("/health"); 
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
