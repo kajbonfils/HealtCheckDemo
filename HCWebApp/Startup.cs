@@ -1,15 +1,11 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using HCWebApp.Controllers;
-using HCWebService.Controllers;
+using System.Net.Http;
+using System;
 
 namespace HCWebApp
 {
@@ -31,7 +27,9 @@ namespace HCWebApp
             services.AddControllersWithViews();
 
             services.AddHealthChecks()
-                .AddSqlServer(Configuration.GetConnectionString("database"), failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Degraded);  
+            .AddSqlServer(Configuration.GetConnectionString("database"), failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Degraded)
+            .AddServiceCheck(new Uri(Configuration.GetSection("API:HCServiceHealth").Value), failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Degraded());
+            ;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

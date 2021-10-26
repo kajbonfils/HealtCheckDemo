@@ -2,34 +2,34 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
-using Dapper;
-using HCWebService.Controllers;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using System.Text.Json;
 
 namespace HCWebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly IArticleRepository _articleRepository;
         private readonly IStockServiceRepository _stockService;
+        private readonly HealthCheckService _healthCheckService;
 
-        public HomeController(ILogger<HomeController> logger, IArticleRepository articleRepository, IStockServiceRepository stockService)
+        public HomeController(IArticleRepository articleRepository, IStockServiceRepository stockService, HealthCheckService healthCheckService)
         {
-            _logger = logger;
             _articleRepository = articleRepository ?? throw new ArgumentNullException(nameof(articleRepository));
             _stockService = stockService ?? throw new ArgumentNullException(nameof(stockService));
+            _healthCheckService = healthCheckService;
         }
 
         public async Task<IActionResult> Index()
         {
+            var health = await _healthCheckService.CheckHealthAsync();
+            var json = System.Text.Json.JsonSerializer.Serialize(health, new JsonSerializerOptions() { WriteIndented = true, MaxDepth=600 });
             var model = new HomeModel
             {
+                Health = health,
+                HealthJson = json,
                 Articles = await _articleRepository.GetArticles(),
                 Quotes = await _stockService.GetQuotes()
             };
@@ -46,49 +46,5 @@ namespace HCWebApp.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-    }
-
-    public class HomeModel
-    {
-        public List<Quote> Quotes { get; set; }
-        public List<Article> Articles { get; set; }
-    }
-
-    public interface IArticleRepository
-    {
-        Task<List<Article>> GetArticles();
-    }
-
-    public class ArticleRepository : IArticleRepository
-    {
-        private readonly IConfiguration _configuration;
-
-        public ArticleRepository(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-
-        public async Task<List<Article>> GetArticles()
-        {
-            string sql = "SELECT * FROM Articles ORDER BY PublishingDate desc";
-            try {
-            using (var connection = new SqlConnection(_configuration.GetConnectionString("database")))
-            {
-                var articles = await connection.QueryAsync<Article>(sql);
-                return articles.ToList();
-            }
-            }
-            catch (Exception){}
-
-            return new List<Article>();
-        }
-    }
-
-    public class Article
-    {
-        public string Id { get; set; }
-        public string Header { get; set; }
-        public string ArticleContent { get; set; }
-        public DateTime PublishingDate { get; set; }
     }
 }

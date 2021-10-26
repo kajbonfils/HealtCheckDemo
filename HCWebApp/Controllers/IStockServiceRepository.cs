@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using HCWebService;
 using HCWebService.Controllers;
+using Microsoft.Extensions.Configuration;
 
 namespace HCWebApp.Controllers
 {
@@ -16,26 +17,33 @@ namespace HCWebApp.Controllers
     class StockServiceRepository : IStockServiceRepository
     {
         private readonly IHttpClientFactory _clientFactory;
+        private readonly IConfiguration _configuration;
 
-        public StockServiceRepository(IHttpClientFactory clientFactory)
+        public StockServiceRepository(IHttpClientFactory clientFactory, IConfiguration configuration)
         {
             _clientFactory = clientFactory;
+            _configuration = configuration;
         }
         public async Task<List<Quote>> GetQuotes()
         {
-            var url = "https://localhost:44335/stock";
+            var url = _configuration.GetSection("API:HCService").Value;
+
             try
             {
-                using var client = _clientFactory.CreateClient();
-                var httpResult = await client.GetAsync(url);
-                if (httpResult.IsSuccessStatusCode)
+                using (var httpClientHandler = new HttpClientHandler())
                 {
-                    var quotesJson = await httpResult.Content.ReadAsStringAsync();
-                    var quotes = JsonSerializer.Deserialize<List<Quote>>(quotesJson,
-                        new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-                    return quotes;
-                }
+                    httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
+                    using var client = new HttpClient(httpClientHandler) { Timeout = TimeSpan.FromMilliseconds(200) };
 
+                    var httpResult = await client.GetAsync(url);
+                    if (httpResult.IsSuccessStatusCode)
+                    {
+                        var quotesJson = await httpResult.Content.ReadAsStringAsync();
+                        var quotes = JsonSerializer.Deserialize<List<Quote>>(quotesJson,
+                            new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                        return quotes;
+                    }
+                }
             }
             catch (Exception)
             {

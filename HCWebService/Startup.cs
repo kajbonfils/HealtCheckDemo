@@ -22,8 +22,8 @@ namespace HCWebService
             services.AddTransient<IStockRepository, StockRepository>();
             services.AddControllers();
             
-            services.AddHealthChecks()// TODO: Demo3
-            //.AddSqlServer(Configuration.GetConnectionString("database"))
+            services.AddHealthChecks()
+            .AddSqlServer(Configuration.GetConnectionString("database"))
             ;
         }
 
