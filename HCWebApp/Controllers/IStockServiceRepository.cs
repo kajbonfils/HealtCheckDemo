@@ -15,26 +15,27 @@ namespace HCWebApp.Controllers
 
     class StockServiceRepository : IStockServiceRepository
     {
-        private readonly IHttpClientFactory _clientFactory;
-
-        public StockServiceRepository(IHttpClientFactory clientFactory)
-        {
-            _clientFactory = clientFactory;
-        }
         public async Task<List<Quote>> GetQuotes()
         {
             var url = "https://localhost:44335/stock";
             try
             {
-                using var client = _clientFactory.CreateClient();
-                var httpResult = await client.GetAsync(url);
-                if (httpResult.IsSuccessStatusCode)
+                using (var httpClientHandler = new HttpClientHandler())
                 {
-                    var quotesJson = await httpResult.Content.ReadAsStringAsync();
-                    var quotes = JsonSerializer.Deserialize<List<Quote>>(quotesJson,
-                        new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-                    return quotes;
+                    httpClientHandler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => { return true; };
+                    using (var client = new HttpClient(httpClientHandler))
+                    {
+                        var httpResult = await client.GetAsync(url);
+                        if (httpResult.IsSuccessStatusCode)
+                        {
+                            var quotesJson = await httpResult.Content.ReadAsStringAsync();
+                            var quotes = JsonSerializer.Deserialize<List<Quote>>(quotesJson,
+                                new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                            return quotes;
+                        }
+                    }
                 }
+
 
             }
             catch (Exception)
