@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using HCWebApp.Controllers;
-using System.Net.Http;
 using System;
 using HealthChecks.UI.Client;
 
@@ -33,7 +32,7 @@ namespace HCWebApp
             ;
 
             // TODO: Demo6
-            //services.AddHealthChecksUI().AddInMemoryStorage();
+            services.AddHealthChecksUI().AddInMemoryStorage();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,7 +45,6 @@ namespace HCWebApp
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
@@ -59,24 +57,26 @@ namespace HCWebApp
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHealthChecks("/health");
+                // TODO: Demo6
                 endpoints.MapHealthChecks("/healthz", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
                 {
                     Predicate = _ => true,
                     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
                 });
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
 
                 // TODO: Demo6
-                //endpoints.MapHealthChecksUI(setupOptions: setup =>
-                //{
-                //    setup.UIPath = "/healthui";
-                //});
+                endpoints.MapHealthChecksUI(setupOptions: setup =>
+                {
+                    setup.UIPath = "/healthui";
+                });
             });
 
             // TODO: Demo6
-            //app.UseHealthChecksUI();
+            app.UseHealthChecksUI();
 
         }
     }
